@@ -8,7 +8,7 @@ services:
       - ./grafana-storage:/var/lib/grafana
     environment:
       - GF_PATHS_DATA=/var/lib/grafana
-    user: "472:472"  # Usuário padrão do Grafana (evita problemas de permissão)
+    user: "472:472" 
     depends_on:
       - prometheus
       - loki
@@ -40,8 +40,8 @@ services:
       - ./alloy-config.yaml:/etc/alloy/config.alloy
       - ./app_a/logs:/var/log/app_a.log
     ports:
-      - "12345:12345" # Alloy metrics
-    command: [ "run", "/etc/alloy/config.alloy" ]
+      - "12345:12345" 
+    command: ["-config.file=/etc/alloy/config.alloy"]
 
   tempo:
     container_name: "Tempo"
@@ -49,8 +49,8 @@ services:
     volumes:
       - ./tempo.yaml:/etc/tempo.yaml
     ports:
-      - "3200:3200"    # Porta para o Grafana se comunicar com Tempo
-      - "4318:4318"    # OTLP HTTP (onde app_a e app_b enviam os traces)
+      - "3200:3200" 
+      - "4318:4318" 
     command: [ "-config.file=/etc/tempo.yaml" ]
 
 
