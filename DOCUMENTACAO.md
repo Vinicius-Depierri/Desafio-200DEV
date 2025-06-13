@@ -38,7 +38,7 @@ Este projeto demonstra a implementação de um sistema de monitoramento distribu
 3. **Acesse**:
     - Grafana: `http://localhost:3000` (usuário/senha: admin/admin).
     - Prometheus: `http://localhost:9090`.
-    - app_a: `http://localhost:8080/health`.
+    - app_a: `http://localhost:8080/health` e `http://localhost:8080/metrics`.
     - app_b: `http://localhost:8081`.
 
     
