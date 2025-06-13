@@ -1,0 +1,35 @@
+server:
+  http_listen_port: 3200
+  grpc_listen_port: 9095
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:4318
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo/traces
+
+compactor:
+  compaction:
+    block_retention: 1h
+
+querier:
+  frontend_worker:
+    frontend_address: 127.0.0.1:9095
+
+query_frontend:
+  search:
+    duration_slo: 5s

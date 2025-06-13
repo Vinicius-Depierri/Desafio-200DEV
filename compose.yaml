@@ -1,0 +1,76 @@
+services:
+  grafana:
+    container_name: "Grafana"
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
+    environment:
+      - GF_PATHS_DATA=/var/lib/grafana
+    user: "472:472"  # Usuário padrão do Grafana (evita problemas de permissão)
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+
+  prometheus:
+    container_name: "Prometheus"
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  loki:
+    container_name: "Loki"
+    image: grafana/loki:2.7.3
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./loki-storage:/loki
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+
+  alloy:
+    container_name: "Alloy"
+    image: grafana/alloy
+    volumes:
+      - ./alloy-config.yaml:/etc/alloy/config.alloy
+      - ./app_a/logs:/var/log/app_a.log
+    ports:
+      - "12345:12345" # Alloy metrics
+    command: [ "run", "/etc/alloy/config.alloy" ]
+
+  tempo:
+    container_name: "Tempo"
+    image: grafana/tempo:latest
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"    # Porta para o Grafana se comunicar com Tempo
+      - "4318:4318"    # OTLP HTTP (onde app_a e app_b enviam os traces)
+    command: [ "-config.file=/etc/tempo.yaml" ]
+
+
+  app_a:
+    container_name: app_a
+    build:
+      context: ./app_a/
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./app_a/logs:/app/logs
+    depends_on:
+      - tempo
+
+  app_b:
+    container_name: app_b
+    build:
+      context: ./app_b/
+    ports:
+      - "8081:8081"
+    depends_on:
+      - app_a
+      - tempo

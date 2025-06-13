@@ -1,0 +1,22 @@
+// Configuração do Alloy para coletar logs e enviar ao Loki
+prometheus.scrape "default" {
+  targets = [
+    {"__address__" = "app_a:8080", "job" = "app_a"},
+  ]
+}
+
+loki.source.file "app_logs" {
+  targets = [
+    {__path__ = "/var/log/app_a.log", "job" = "app_a"},
+  ]
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+    external_labels = {
+      source = "alloy",
+    }
+  }
+}
