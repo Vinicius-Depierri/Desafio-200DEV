@@ -40,3 +40,5 @@ Este projeto demonstra a implementação de um sistema de monitoramento distribu
     - Prometheus: `http://localhost:9090`.
     - app_a: `http://localhost:8080/health`.
     - app_b: `http://localhost:8081`.
+
+    
