@@ -30,8 +30,8 @@ Este projeto demonstra a implementação de um sistema de monitoramento distribu
    docker-compose up -d
 
 2. **Permissão**:
-    Execute este comando para dar permissão ao Grafana para escrever no diretório `/var/lib/grafana` dentro do container.
-    (NÃO RECOMENDADO PARA PRODUÇÃO)
+    - Execute este comando para dar permissão ao Grafana para escrever no diretório `/var/lib/grafana` dentro do container.
+    - (NÃO RECOMENDADO PARA PRODUÇÃO)
     ```bash
     sudo chmod -R 777 grafana-storage/
 
